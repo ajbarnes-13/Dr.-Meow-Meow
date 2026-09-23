@@ -330,7 +330,9 @@ function PetProfileVetRow({vet, onSave, onDelete}) {
             <td className='pet-profile-vet-data'>{vet.office_name}</td>
             <td className='pet-profile-vet-data'>{address}</td>
             <td className='pet-profile-vet-data'>{vet.phone_number}</td>
-            <td className='pet-profile-vet-data'>{vet.website}</td>
+            <td className='pet-profile-vet-data'>
+                {vet.website && <a href={toAbsoluteUrl(vet.website)} target="_blank" rel="noopener noreferrer">{vet.website}</a>}
+            </td>
             <td className="pet-profile-row-action"><MdEdit onClick={startEdit} /></td>
             <td className="pet-profile-row-action"><MdDelete onClick={() => onDelete(vet)} /></td>
         </tr>

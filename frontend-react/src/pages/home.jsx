@@ -87,12 +87,20 @@ function Home() {
     };
 
     React.useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (!user) return;
+
+            // Right after signup, login.jsx sets displayName via updateProfile()
+            // in a separate call *after* the account is created -- the sign-in
+            // event (and this callback) can fire before that finishes, handing
+            // us a user object whose displayName isn't set yet. reload() pulls
+            // the current profile from Firebase so we never cache that blank
+            // moment and fall back to the email permanently.
+            await user.reload();
 
             // displayName is the "Preferred Name" typed at sign-up (could be a full
             // name); only show the first word of it on the welcome banner.
-            const firstName = (user.displayName || user.email || '').split(' ')[0];
+            const firstName = (auth.currentUser.displayName || auth.currentUser.email || '').split(' ')[0];
             setUserName(firstName);
             loadPets();
             loadAppointments();

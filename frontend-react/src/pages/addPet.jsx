@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase';
 import StagedListSection from '../components/stagedListSection';
+import { hasAnyValue } from '../components/editableFieldList';
 import useUnsavedChangesGuard from '../components/unsavedChangesGuard';
 import './addPet.css';
 
@@ -53,14 +54,80 @@ function addPet() {
     const [healthConditions, setHealthConditions] = useState([]);
     const [foods, setFoods] = useState([]);
     const [behaviors, setBehaviors] = useState([]);
+
+    // The fields currently typed into each section's own form, owned here
+    // (not inside StagedListSection) so the page's single Save button can
+    // pick this up too -- "+ Add Another" only exists for staging more than
+    // one entry, it isn't a prerequisite for the first one to be saved.
+    const [newVaccine, setNewVaccine] = useState({});
+    const [newMedication, setNewMedication] = useState({});
+    const [newHealthCondition, setNewHealthCondition] = useState({});
+    const [newFood, setNewFood] = useState({});
+    const [newBehavior, setNewBehavior] = useState({});
     const [error, setError] = useState('');
     const [createdPetId, setCreatedPetId] = useState(null);
 
-    // Anything typed into the form, or staged in any of the five lists below,
-    // counts as an unsaved change.
+    const vetOptions = vets.map(v => ({ value: v.vet_id, label: v.vet_name }));
+
+    // Field configs for the five optional sections below -- pulled out to
+    // named consts (rather than written inline on each StagedListSection)
+    // since onSubmit also needs them, to tell whether a section's draft has
+    // anything worth including.
+    const vaccineFields = [
+        { key: 'vaccine_name', label: 'Vaccine', required: true },
+        { key: 'date_given', label: 'Date Given', type: 'date', required: true },
+        { key: 'next_due_date', label: 'Next Due Date', type: 'date', required: true },
+        { key: 'vet_id', label: 'Vet', type: 'select', required: true, options: vetOptions },
+    ];
+
+    const medicationFields = [
+        { key: 'medication_name', label: 'Medication Name', required: true },
+        { key: 'reason', label: 'Reason', required: true },
+        { key: 'vet_prescribed_by_id', label: 'Prescribed By', type: 'select', required: true, options: vetOptions },
+        { key: 'dosage', label: 'Dosage', required: true },
+        { key: 'time_to_take', label: 'Time to Take', type: 'time', required: true },
+        { key: 'times_per_day', label: 'Times Per Day', type: 'number', required: true },
+        { key: 'with_food', label: 'With Food?', type: 'checkbox' },
+        { key: 'date_prescribed', label: 'Date Prescribed', type: 'date', required: true },
+        { key: 'next_dose_due', label: 'Next Dose Due', type: 'date', required: true },
+        { key: 'date_stopped', label: 'Date Stopped (leave blank if still being given)', type: 'date' },
+    ];
+
+    const healthConditionFields = [
+        { key: 'condition', label: 'Health Condition', required: true },
+        { key: 'treatment', label: 'Treatment', required: true },
+        { key: 'date_diagnosed', label: 'Diagnosis Date', type: 'date', required: true },
+        { key: 'vet_diagnosed_by_id', label: 'Diagnosed By', type: 'select', required: true, options: vetOptions },
+    ];
+
+    const behaviorFields = [
+        { key: 'behavior', label: 'Behavior', required: true },
+        { key: 'date_started', label: 'Date Started', type: 'date', required: true },
+        { key: 'frequency', label: 'Frequency', required: true },
+        { key: 'total_occurrences', label: 'Total Occurrences', type: 'number', required: true },
+        { key: 'date_stopped', label: 'Date Stopped', type: 'date' },
+    ];
+
+    const foodFields = [
+        { key: 'brand', label: 'Brand', required: true },
+        { key: 'food_type', label: 'Wet or Dry', required: true },
+        { key: 'flavor', label: 'Flavor', required: true },
+        { key: 'how_much', label: 'How Much', required: true },
+        { key: 'how_often', label: 'How Often', required: true },
+        { key: 'health_consideration', label: 'Health Consideration', required: true },
+        { key: 'date_started', label: 'Date Started', type: 'date', required: true },
+        { key: 'date_stopped', label: 'Date Stopped', type: 'date', required: true },
+    ];
+
+    // Anything typed into the form, staged in any of the five lists below, or
+    // sitting unsaved in one of the five sections' own draft fields, counts
+    // as an unsaved change.
     const dirty = Object.keys(form).length > 0
         || medications.length > 0 || vaccines.length > 0 || healthConditions.length > 0
-        || foods.length > 0 || behaviors.length > 0;
+        || foods.length > 0 || behaviors.length > 0
+        || hasAnyValue(vaccineFields, newVaccine) || hasAnyValue(medicationFields, newMedication)
+        || hasAnyValue(healthConditionFields, newHealthCondition) || hasAnyValue(foodFields, newFood)
+        || hasAnyValue(behaviorFields, newBehavior);
     const { guardedNavigate, modal } = useUnsavedChangesGuard(dirty);
 
     // When the page first loads, ask the server for the list of vets so we
@@ -176,12 +243,21 @@ function addPet() {
             const createdPet = await response.json();
             const petId = createdPet.pet_id;
 
+            // Whatever's still sitting in each section's own fields counts too,
+            // even if "+ Add Another" was never clicked -- that button is only
+            // for staging more than one entry, not a prerequisite for saving.
+            const allMedications = hasAnyValue(medicationFields, newMedication) ? [...medications, newMedication] : medications;
+            const allVaccines = hasAnyValue(vaccineFields, newVaccine) ? [...vaccines, newVaccine] : vaccines;
+            const allHealthConditions = hasAnyValue(healthConditionFields, newHealthCondition) ? [...healthConditions, newHealthCondition] : healthConditions;
+            const allFoods = hasAnyValue(foodFields, newFood) ? [...foods, newFood] : foods;
+            const allBehaviors = hasAnyValue(behaviorFields, newBehavior) ? [...behaviors, newBehavior] : behaviors;
+
             const results = await Promise.all([
-                createAll('medications', medications, buildMedicationPayload, petId, authHeaders),
-                createAll('vaccines', vaccines, buildVaccinePayload, petId, authHeaders),
-                createAll('health_conditions', healthConditions, buildHealthConditionPayload, petId, authHeaders),
-                createAll('foods', foods, buildFoodPayload, petId, authHeaders),
-                createAll('behaviors', behaviors, buildBehaviorPayload, petId, authHeaders),
+                createAll('medications', allMedications, buildMedicationPayload, petId, authHeaders),
+                createAll('vaccines', allVaccines, buildVaccinePayload, petId, authHeaders),
+                createAll('health_conditions', allHealthConditions, buildHealthConditionPayload, petId, authHeaders),
+                createAll('foods', allFoods, buildFoodPayload, petId, authHeaders),
+                createAll('behaviors', allBehaviors, buildBehaviorPayload, petId, authHeaders),
             ]);
 
             if (results.flat().some(res => !res.ok)) {
@@ -338,12 +414,9 @@ function addPet() {
                     onAdd={(item) => setVaccines([...vaccines, item])}
                     onRemove={(i) => setVaccines(vaccines.filter((_, idx) => idx !== i))}
                     renderSummary={(v) => v.vaccine_name}
-                    fields={[
-                        { key: 'vaccine_name', label: 'Vaccine', required: true },
-                        { key: 'date_given', label: 'Date Given', type: 'date', required: true },
-                        { key: 'next_due_date', label: 'Next Due Date', type: 'date', required: true },
-                        { key: 'vet_id', label: 'Vet', type: 'select', required: true, options: vets.map(v => ({ value: v.vet_id, label: v.vet_name })) },
-                    ]}
+                    fields={vaccineFields}
+                    draft={newVaccine}
+                    onDraftChange={setNewVaccine}
                 />
 
                 <div className="add-pet-form">
@@ -377,18 +450,9 @@ function addPet() {
                     onAdd={(item) => setMedications([...medications, item])}
                     onRemove={(i) => setMedications(medications.filter((_, idx) => idx !== i))}
                     renderSummary={(m) => `${m.medication_name} (${m.dosage})`}
-                    fields={[
-                        { key: 'medication_name', label: 'Medication Name', required: true },
-                        { key: 'reason', label: 'Reason', required: true },
-                        { key: 'vet_prescribed_by_id', label: 'Prescribed By', type: 'select', required: true, options: vets.map(v => ({ value: v.vet_id, label: v.vet_name })) },
-                        { key: 'dosage', label: 'Dosage', required: true },
-                        { key: 'time_to_take', label: 'Time to Take', type: 'time', required: true },
-                        { key: 'times_per_day', label: 'Times Per Day', type: 'number', required: true },
-                        { key: 'with_food', label: 'With Food?', type: 'checkbox' },
-                        { key: 'date_prescribed', label: 'Date Prescribed', type: 'date', required: true },
-                        { key: 'next_dose_due', label: 'Next Dose Due', type: 'date', required: true },
-                        { key: 'date_stopped', label: 'Date Stopped (leave blank if still being given)', type: 'date' },
-                    ]}
+                    fields={medicationFields}
+                    draft={newMedication}
+                    onDraftChange={setNewMedication}
                 />
 
                 <StagedListSection
@@ -397,12 +461,9 @@ function addPet() {
                     onAdd={(item) => setHealthConditions([...healthConditions, item])}
                     onRemove={(i) => setHealthConditions(healthConditions.filter((_, idx) => idx !== i))}
                     renderSummary={(c) => c.condition}
-                    fields={[
-                        { key: 'condition', label: 'Health Condition', required: true },
-                        { key: 'treatment', label: 'Treatment', required: true },
-                        { key: 'date_diagnosed', label: 'Diagnosis Date', type: 'date', required: true },
-                        { key: 'vet_diagnosed_by_id', label: 'Diagnosed By', type: 'select', required: true, options: vets.map(v => ({ value: v.vet_id, label: v.vet_name })) },
-                    ]}
+                    fields={healthConditionFields}
+                    draft={newHealthCondition}
+                    onDraftChange={setNewHealthCondition}
                 />
 
                 <StagedListSection
@@ -411,13 +472,9 @@ function addPet() {
                     onAdd={(item) => setBehaviors([...behaviors, item])}
                     onRemove={(i) => setBehaviors(behaviors.filter((_, idx) => idx !== i))}
                     renderSummary={(b) => b.behavior}
-                    fields={[
-                        { key: 'behavior', label: 'Behavior', required: true },
-                        { key: 'date_started', label: 'Date Started', type: 'date', required: true },
-                        { key: 'frequency', label: 'Frequency', required: true },
-                        { key: 'total_occurrences', label: 'Total Occurrences', type: 'number', required: true },
-                        { key: 'date_stopped', label: 'Date Stopped', type: 'date' },
-                    ]}
+                    fields={behaviorFields}
+                    draft={newBehavior}
+                    onDraftChange={setNewBehavior}
                 />
 
                 <StagedListSection
@@ -426,16 +483,9 @@ function addPet() {
                     onAdd={(item) => setFoods([...foods, item])}
                     onRemove={(i) => setFoods(foods.filter((_, idx) => idx !== i))}
                     renderSummary={(f) => `${f.brand} - ${f.flavor}`}
-                    fields={[
-                        { key: 'brand', label: 'Brand', required: true },
-                        { key: 'food_type', label: 'Wet or Dry', required: true },
-                        { key: 'flavor', label: 'Flavor', required: true },
-                        { key: 'how_much', label: 'How Much', required: true },
-                        { key: 'how_often', label: 'How Often', required: true },
-                        { key: 'health_consideration', label: 'Health Consideration', required: true },
-                        { key: 'date_started', label: 'Date Started', type: 'date', required: true },
-                        { key: 'date_stopped', label: 'Date Stopped', type: 'date', required: true },
-                    ]}
+                    fields={foodFields}
+                    draft={newFood}
+                    onDraftChange={setNewFood}
                 />
             </div>
             </div>

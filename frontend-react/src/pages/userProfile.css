@@ -34,6 +34,12 @@
     font-weight: bold;
 }
 
+.user-profile-demo-note {
+    color: var(--text-color);
+    font-style: italic;
+    font-size: 14px;
+}
+
 .user-profile-success {
     color: #2e7d32;
     font-weight: bold;

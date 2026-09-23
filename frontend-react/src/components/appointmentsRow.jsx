@@ -11,6 +11,11 @@ const formatTime = (timeStr) => {
     return `${hour12}:${minute} ${period}`;
 };
 
+// Without a scheme, a browser treats a link's href as relative to the current
+// page instead of an external site -- clicking "example.com" from here would
+// resolve to /appointments/example.com instead of actually leaving the site.
+const toAbsoluteUrl = (url) => /^https?:\/\//i.test(url) ? url : `https://${url}`;
+
 function AppointmentsRow({appointment, onEdit, onDelete, isEditing, editValues, onFieldChange, onSave, onCancel, vets, offices}) {
     if (isEditing) {
         return (
@@ -34,7 +39,9 @@ function AppointmentsRow({appointment, onEdit, onDelete, isEditing, editValues, 
                     {[editValues.office_address, editValues.address_2, editValues.city, editValues.office_state, editValues.zip_code].filter(Boolean).join(' ')}
                 </td>
                 <td className='appointment-data'>{appointment.phone_number}</td>
-                <td className='appointment-data'>{appointment.website}</td>
+                <td className='appointment-data'>
+                    {appointment.website && <a href={toAbsoluteUrl(appointment.website)} target="_blank" rel="noopener noreferrer">{appointment.website}</a>}
+                </td>
                 <td className='appointment-data'>
                     <input type='date' value={editValues.appointment_date} onChange={(e) => onFieldChange('appointment_date', e.target.value)} />
                 </td>
@@ -62,7 +69,9 @@ function AppointmentsRow({appointment, onEdit, onDelete, isEditing, editValues, 
             <td className='appointment-data'>{appointment.office_name}</td>
             <td className='appointment-data'>{address}</td>
             <td className='appointment-data'>{appointment.phone_number}</td>
-            <td className='appointment-data'>{appointment.website}</td>
+            <td className='appointment-data'>
+                {appointment.website && <a href={toAbsoluteUrl(appointment.website)} target="_blank" rel="noopener noreferrer">{appointment.website}</a>}
+            </td>
             <td className='appointment-data'>{appointment.appointment_date}</td>
             <td className='appointment-data'>{formatTime(appointment.appointment_time)}</td>
             <td className='appointment-data'>{appointment.reason}</td>

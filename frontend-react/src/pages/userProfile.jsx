@@ -54,6 +54,13 @@ function UserProfile() {
     // sign-in popup for Google accounts.
     const isGoogleAccount = user?.providerData?.[0]?.providerId === 'google.com';
 
+    // The portfolio demo account's email, so its own email/password/delete
+    // controls can be disabled here -- visitors can look around and change
+    // their Preferred Name, but can't lock out the next visitor or wipe the
+    // account. This is a UI-level guard only, not a security boundary: it
+    // just keeps a casual click from breaking the demo for everyone else.
+    const isDemoAccount = Boolean(import.meta.env.VITE_DEMO_ACCOUNT_EMAIL) && user?.email === import.meta.env.VITE_DEMO_ACCOUNT_EMAIL;
+
     const reauthenticate = async (password) => {
         if (isGoogleAccount) {
             await reauthenticateWithPopup(auth.currentUser, googleProvider);
@@ -206,9 +213,10 @@ function UserProfile() {
                             placeholder="Current password"
                             required
                         />
-                        <button type="submit">Save</button>
+                        <button type="submit" disabled={isDemoAccount}>Save</button>
                     </form>
                 )}
+                {isDemoAccount && <p className="user-profile-demo-note">Disabled on the shared demo account.</p>}
                 {emailStatus.error && <p className="user-profile-error">{emailStatus.error}</p>}
                 {emailStatus.success && <p className="user-profile-success">{emailStatus.success}</p>}
             </section>
@@ -240,9 +248,10 @@ function UserProfile() {
                             placeholder="Confirm new password"
                             required
                         />
-                        <button type="submit">Save</button>
+                        <button type="submit" disabled={isDemoAccount}>Save</button>
                     </form>
                 )}
+                {isDemoAccount && <p className="user-profile-demo-note">Disabled on the shared demo account.</p>}
                 {passwordStatus.error && <p className="user-profile-error">{passwordStatus.error}</p>}
                 {passwordStatus.success && <p className="user-profile-success">{passwordStatus.success}</p>}
             </section>
@@ -254,7 +263,8 @@ function UserProfile() {
             <section className="user-profile-section">
                 <h2>Delete Account</h2>
                 <p>This permanently deletes your account, along with all of your pets, appointments, and other saved data. This can't be undone.</p>
-                <button type="button" className="delete-account-button" onClick={() => setDeleteConfirmOpen(true)}>Delete Account</button>
+                <button type="button" className="delete-account-button" onClick={() => setDeleteConfirmOpen(true)} disabled={isDemoAccount}>Delete Account</button>
+                {isDemoAccount && <p className="user-profile-demo-note">Disabled on the shared demo account.</p>}
             </section>
 
             {deleteConfirmOpen && (

@@ -10,6 +10,10 @@ router.use(requireAuth);
 
 const isOptionalString = (value) => value === undefined || value === null || typeof value === 'string';
 
+// times_per_day is stored as an INT, so either a number or a numeric string
+// is fine -- the frontend's shared field editor sends it as a number.
+const isOptionalStringOrNumber = (value) => isOptionalString(value) || typeof value === 'number';
+
 const isValidMedication = (medication_name, pet_id, reason, date_prescribed, date_stopped, dosage, time_to_take, times_per_day, with_food, next_dose_due, vet_prescribed_by_id) => {
     // Only Medication, Reason, Prescribed By, and Dosage are required -- everything
     // else about a medication (dates, timing, food) can be filled in later.
@@ -46,7 +50,7 @@ const isValidMedication = (medication_name, pet_id, reason, date_prescribed, dat
         return false;
     }
 
-    if (!isOptionalString(times_per_day)) {
+    if (!isOptionalStringOrNumber(times_per_day)) {
         return false;
     }
 
