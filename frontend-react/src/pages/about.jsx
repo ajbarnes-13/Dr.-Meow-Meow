@@ -19,7 +19,7 @@ function aboutPage() {
                         <p>
                             Like what you see? Find more of my work and my resume at{' '}
                             <a href="https://alicebarnes.vercel.app/" target="_blank" rel="noopener noreferrer">my website</a>,
-                            or email me at <a href="mailto:alice.m.j.barnes@gmail.com">alice.m.j.barnes@gmail.com</a>.
+                            or email me at alice.m.j.barnes@gmail.com.
                         </p>
         </>
     );

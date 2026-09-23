@@ -47,8 +47,7 @@ function HelpFAQ() {
             </div>
 
             <p className="faq-contact-line">
-                Couldn't find an answer here? Send me an email at{' '}
-                <a href="mailto:alice.m.j.barnes@gmail.com">alice.m.j.barnes@gmail.com</a>.
+                Couldn't find an answer here? Send me an email at alice.m.j.barnes@gmail.com.
             </p>
         </div>
     );

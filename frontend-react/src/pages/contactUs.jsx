@@ -9,7 +9,7 @@ function ContactUs() {
                 Got a question, found a bug, or just want to tell me about your pet? I'd love to hear from you.
             </p>
             <p>
-                Email me at <a href="mailto:alice.m.j.barnes@gmail.com">alice.m.j.barnes@gmail.com</a>.
+                Email me at alice.m.j.barnes@gmail.com.
             </p>
             <p>
                 You can also see more of my work at{' '}
