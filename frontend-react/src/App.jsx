@@ -85,6 +85,23 @@ function NavBar() {
         return () => document.removeEventListener('mousedown', onClickOutside);
     }, [menuOpen]);
 
+    // Loads the current user's pets for the Pet Profiles / Edit Pet Profile
+    // submenus. Pulled out to its own function so it can be called again on
+    // every navigation below -- otherwise a pet added, renamed, or deleted
+    // elsewhere in the app wouldn't show up here until the next sign-in.
+    const loadPets = () => {
+        if (!auth.currentUser) return;
+        auth.currentUser.getIdToken()
+            .then(token => fetch(`${import.meta.env.VITE_API_BASE_URL}/pets`, {
+                headers: { Authorization: `Bearer ${token}` }
+            }))
+            // A failed request sends back an {error: ...} object instead of a list --
+            // fall back to an empty list so the "Pet Profiles" menu can't crash on it.
+            .then(res => res.ok ? res.json() : [])
+            .then(setPets)
+            .catch(err => console.error(err));
+    };
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setLoggedIn(Boolean(user));
@@ -94,19 +111,19 @@ function NavBar() {
                 return;
             }
 
-            user.getIdToken()
-                .then(token => fetch(`${import.meta.env.VITE_API_BASE_URL}/pets`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                }))
-                // A failed request sends back an {error: ...} object instead of a list --
-                // fall back to an empty list so the "Pet Profiles" menu can't crash on it.
-                .then(res => res.ok ? res.json() : [])
-                .then(setPets)
-                .catch(err => console.error(err));
+            loadPets();
         });
 
         return unsubscribe;
     }, []);
+
+    // Re-checks the pet list on every navigation while signed in, so the Pet
+    // Profiles / Edit Pet Profile submenus stay current after a pet is added,
+    // renamed, or deleted on another page during the same session -- the
+    // sign-in load above only ever runs once per session otherwise.
+    useEffect(() => {
+        if (loggedIn) loadPets();
+    }, [location.pathname, loggedIn]);
 
     // No menu at all on the login screen, or for a signed-out visitor. A guest
     // reading the public Help/Contact/About/Privacy pages has nothing here
