@@ -1,0 +1,186 @@
+/* Two side-by-side columns holding the Pet Info/Vaccines/Food containers and
+   the Medications/Health Conditions/Behaviors containers. Each column stacks
+   its own containers independently (plain flexbox, so nothing can overlap),
+   which avoids the gap a single flex-wrap row would leave under a short
+   container whenever it happens to share a row with a tall one. On a narrow
+   screen the two columns just wrap below each other like any flex-wrap row. */
+.add-pet-sections {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.add-pet-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1 1 380px;
+    max-width: 500px;
+}
+
+.add-pet-form {
+    background-color: #f1dcbe;
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-align: left;
+}
+
+.add-pet-form h3 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.add-pet-fields {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    align-items: flex-end;
+}
+
+.add-pet-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-pet-field p {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 0 2px 0;
+    text-align: center;
+}
+
+.add-pet-field input,
+.add-pet-field select {
+    font-size: 12px;
+    border: 1px solid var(--table-header-color);
+    border-radius: 6px;
+    padding: 4px 8px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.add-pet-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.add-pet-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 16px auto;
+}
+
+.add-pet-title {
+    text-align: center;
+}
+
+.add-pet-required-note {
+    text-align: center;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-color);
+}
+
+.welcome-banner {
+    background-color: #f1dcbe;
+    border-radius: 10px;
+    padding: 10px 16px;
+    margin: 0 auto 12px;
+    max-width: 500px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.staged-list-section {
+    background-color: #f1dcbe;
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-align: left;
+}
+
+.staged-list-section h3 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.staged-list-hint {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--text-color);
+    margin: 0 0 10px;
+}
+
+.staged-list {
+    list-style: none;
+    margin: 0 0 10px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.staged-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    border: 1px solid var(--table-header-color);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.staged-list li svg {
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.staged-list li svg:hover {
+    color: var(--table-header-color);
+}
+
+.staged-list-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.staged-list-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.staged-list-field p {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 0 2px 0;
+}
+
+.staged-list-form input,
+.staged-list-form select {
+    font-size: 12px;
+    border: 1px solid var(--table-header-color);
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+.staged-list-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+}
+
+.staged-list-error,
+.add-pet-error {
+    color: #c0392b;
+    font-weight: bold;
+}

@@ -1,0 +1,194 @@
+/* Global style sheet for specific elements */
+
+/* Hamburger nav menu */
+
+/* Main menu: the ☰ toggle button that shows/hides the nav */
+.hamburger {
+    display: block;
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 1;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Rotates the ☰ so its stacked lines read vertically while the nav is open,
+   giving a visual cue that clicking it again will close the menu. */
+.hamburger.open {
+    transform: rotate(90deg);
+}
+
+    /* Main menu: nav container, hidden until toggled open */
+    nav {
+        display: none;
+        flex-direction: column;
+    }
+
+    /* Main menu: dropdown box styling when nav is open. The Pet Profiles
+       sub menu renders inside this nav, so it inherits this box too. */
+    nav.open {
+        display: flex;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: var(--table-header-color);
+        padding: 10px;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Anchors the sub menu to the Pet Profiles button rather than to nav */
+    .submenu-wrapper {
+        position: relative;
+    }
+
+    /* Pops the sub menu out to the left of the Pet Profiles button, out of
+       flow, instead of stacking it inline between the main menu items */
+    .submenu {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        right: 100%;
+        padding: 10px;
+        background-color: var(--header-color);
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .submenu a {
+        background-color: var(--header-color);
+        border-radius: 20px;
+        color: var(--text-color);
+    }
+
+    .submenu a:hover {
+        background-color: var(--background-color);
+        color: var(--text-color);
+        border-radius: 20px;
+    }
+
+/* Main menu: positions the hamburger button/nav dropdown relative to header */
+.nav-wrapper {
+    position: relative;
+}
+
+    /* Main menu: strips a default separator after each link (also applies
+       to Pet Profiles sub menu links, since they're <a> tags inside nav) */
+    nav a:not(:last-child)::after {
+        content: none;
+    }
+
+    /* Shared styling for both main menu items and Pet Profiles sub menu
+       pet links/buttons, since the sub menu is nested inside nav */
+    nav a,
+    nav button {
+        background-color: var(--table-header-color);
+        color: aliceblue;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: left;
+    }
+
+    /* :visited carries more specificity weight than a plain "nav a" selector
+       (it counts as a class-level selector, same tier as .foot-links a), so
+       without this a visited top-level nav link would fall back to index.css's
+       global a:visited color instead of staying aliceblue like the rest of the
+       pill. Scoped to direct children only -- the Pet Profiles/Edit Pet Profile
+       sub menu links sit deeper inside nav and need to keep their own brown
+       (.submenu a below) instead of getting pulled into this. */
+    nav > a:visited {
+        color: aliceblue;
+    }
+
+    /* Hover state shared by main menu items and Pet Profiles sub menu links.
+       Declared after nav > a:visited above so hovering a visited top-level
+       link still wins the tie and shows the teal hover color, not aliceblue. */
+    nav a:hover,
+    nav button:hover {
+        background-color: var(--background-color);
+        color: var(--table-header-color);
+    }
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    background-color: var(--header-color);
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* "Dr. Meow Meow" site title -- still a link to /home, just without the
+   underline a plain <a> gets by default */
+.brand h1 a {
+    text-decoration: none;
+    color: inherit;
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--header-color);
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.foot-links {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    gap: 15px;
+}
+
+.foot-links a {
+    color: var(--text-color);
+    background-color: var(--header-color);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.foot-links a:hover {
+    background-color: var(--table-header-color);
+    color: aliceblue;
+}
+
+.foot-links a:visited {
+    color: var(--text-color);
+}
+
+/* Default look for action buttons (Save, Cancel, Add Pet, Delete Vet, etc.)
+   site-wide -- matches the Contact/About/Privacy Policy footer buttons.
+   Nav/tab buttons below override this with their own selectors; a handful
+   of special-case buttons (the destructive Delete Pet button, the branded
+   Google sign-in button) intentionally override it too. */
+button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+}
+
+button:hover {
+    background-color: var(--button-bg-hover);
+    color: aliceblue;
+}

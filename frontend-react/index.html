@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/dr_meow_meow_mascot_favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dr. Meow-Meow</title>
+    <!-- Google Fonts: preconnect early to cut DNS/TLS latency before the CSS/font requests fire -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- Preconnect to the actual font-file host; crossorigin required since fonts are fetched via CORS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Loads Lato (regular + bold), matching index.css's body font-family; display=swap shows fallback text immediately, swaps once loaded -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

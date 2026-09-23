@@ -1,0 +1,84 @@
+/* Medications/Vaccines/Health Conditions/Food/Behaviors, rendered as a stack
+   of directly-editable field cards (see editableFieldList.jsx) instead of a
+   table, matching the look of Pet Info/Microchip above them. */
+.add-pet-field-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.add-pet-field-card {
+    background-color: #f1dcbe;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.add-pet-field-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-pet-field-actions svg {
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--text-color);
+}
+
+.add-pet-field-actions svg:hover {
+    color: var(--table-header-color);
+}
+
+/* Sits on its own line centered on the page, directly above the Save/Cancel
+   buttons, instead of stretched inside one of the two side-by-side columns. */
+.add-pet-centered-section {
+    max-width: 500px;
+    margin: 16px auto;
+}
+
+/* Deliberately red, unlike the site's other action buttons -- this one
+   deletes a pet, so it keeps its own warning color instead of the shared
+   button look. */
+.delete-pet-button {
+    background-color: #c0392b;
+    color: white;
+}
+
+.delete-pet-button:hover {
+    background-color: #a93226;
+}
+
+.delete-pet-button:active {
+    background-color: #922b21;
+}
+
+/* Full-screen dimmed backdrop behind the delete confirmation pop-up */
+.delete-confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.delete-confirm-box {
+    background-color: white;
+    padding: 24px;
+    border-radius: 8px;
+    max-width: 360px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.delete-confirm-box p {
+    margin-bottom: 16px;
+}
+
+.delete-confirm-box button {
+    margin: 0 8px;
+}

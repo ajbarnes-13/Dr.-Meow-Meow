@@ -1,0 +1,20 @@
+# Environment variables
+.env
+.env.local
+
+# Firebase Admin SDK service account key -- grants full backend access to the Firebase project, never commit
+firebase-service-account.json
+
+# Dependencies
+node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store

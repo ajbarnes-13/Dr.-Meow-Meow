@@ -1,0 +1,75 @@
+.AppointmentsTable {
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.AppointmentsTable thead th {
+    font-size: 13px;
+    border: 1px solid var(--table-header-color);
+    background-color: var(--table-header-color);
+    padding: 12px 5px;
+    color: aliceblue;
+}
+
+.AppointmentsTable thead th:not(:first-child) {
+    border-left-color: aliceblue;
+}
+
+.AppointmentsTable thead th:not(:last-child) {
+    border-right-color: aliceblue;
+}
+
+.AppointmentsTable thead tr:first-child th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.AppointmentsTable thead tr:first-child th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.AppointmentsTable td.appointment-data,
+.pet-name-link {
+    font-size: 14px;
+    background-color: aliceblue;
+    border: 1px solid var(--table-header-color);
+    padding: 5px;
+    text-align: center;
+    color: var(--text-color);
+}
+
+.AppointmentsTable td.pet-name-link a{
+    color: var(--text-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.AppointmentsTable td.pet-name-link:hover {
+    background-color: rgb(223, 232, 240);
+}
+
+.AppointmentsTable td:not(.appointment-data, .pet-name-link) {
+    cursor: pointer;
+}
+
+.AppointmentsTable tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+.AppointmentsTable tbody tr:last-child td.appointment-data:nth-last-child(3) {
+    border-bottom-right-radius: 10px;
+}
+
+/* Edit/delete/save/cancel icons in the last two columns */
+.AppointmentsTable td svg {
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-color);
+    vertical-align: middle;
+}
+
+.AppointmentsTable td svg:hover {
+    color: var(--table-header-color);
+}

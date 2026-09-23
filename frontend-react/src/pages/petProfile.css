@@ -1,0 +1,334 @@
+/* Puts the pet's photo to the left of its name */
+.pet-profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pet-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px solid;
+    border-color: var(--text-color);
+    object-fit: cover;
+    background-color: #eee;
+    align-items: center;
+}
+
+/* FIREBASE STORAGE PHOTO UPLOAD -- on hold until Storage billing (Blaze plan) is turned on.
+   Re-enable together with the commented-out upload <label> block in petProfile.jsx.
+
+.pet-photo-upload {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.pet-photo-upload-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.pet-photo-upload:hover .pet-photo-upload-label,
+.pet-photo-upload:focus-within .pet-photo-upload-label {
+    opacity: 1;
+}
+
+*/
+
+.pet-profile-nav-bar {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.1rem;
+}
+
+.pet-profile-nav-bar::before,
+.pet-profile-nav-bar::after {
+    content: '';
+    flex: 1;
+    align-self: flex-end;
+    height: 2px;
+    background-color: var(--table-header-color);
+}
+
+.pet-profile-nav-bar button {
+    background-color: var(--table-header-color);
+    color: aliceblue;
+    border: 2px solid;
+    border-color: var(--table-header-color);
+    border-radius: 20px 20px 0 0;
+}
+
+.pet-profile-nav-bar button.active {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border-bottom: none;
+}
+
+.pet-profile-tab-content {
+    margin-top: 1rem;
+}
+
+.pet-profile-table-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.pet-profile-bio-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.pet-profile-bio-table thead th {
+    font-size: 13px;
+    border: 1px solid var(--table-header-color);
+    background-color: var(--table-header-color);
+    padding: 12px 5px;
+    color: aliceblue;
+}
+
+.pet-profile-bio-table thead th:not(:first-child) {
+    border-left-color: aliceblue;
+}
+
+.pet-profile-bio-table thead th:not(:last-child) {
+    border-right-color: aliceblue;
+}
+
+.pet-profile-bio-table thead tr:first-child th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.pet-profile-bio-table thead tr:first-child th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.pet-profile-bio-table td.bio-data {
+    font-size: 11px;
+    background-color: aliceblue;
+    border: 1px solid var(--table-header-color);
+    padding: 5px;
+    text-align: center;
+    color: var(--text-color);
+}
+
+.pet-profile-bio-table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+.pet-profile-bio-table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+/* Every other tab's table (Microchip, Appointments, Vet, Medications,
+   Vaccines, Health Conditions, Food, Behaviors) shares this same look with
+   the Bio table above -- grouped together instead of repeating the same
+   rules eight times. */
+.pet-profile-microchip-table,
+.pet-profile-appointment-table,
+.pet-profile-vet-table,
+.pet-profile-medication-table,
+.pet-profile-vaccine-table,
+.pet-profile-health-condition-table,
+.pet-profile-food-table,
+.pet-profile-behavior-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.pet-profile-microchip-table thead th,
+.pet-profile-appointment-table thead th,
+.pet-profile-vet-table thead th,
+.pet-profile-medication-table thead th,
+.pet-profile-vaccine-table thead th,
+.pet-profile-health-condition-table thead th,
+.pet-profile-food-table thead th,
+.pet-profile-behavior-table thead th {
+    font-size: 13px;
+    border: 1px solid var(--table-header-color);
+    background-color: var(--table-header-color);
+    padding: 12px 5px;
+    color: aliceblue;
+}
+
+/* Excludes .pet-profile-row-action (the trailing edit/delete/save/cancel
+   icon cells) so those stay bare, with no border or background box around
+   them, instead of looking like they're boxed in as part of the table. */
+.pet-profile-microchip-table td:not(.pet-profile-row-action),
+.pet-profile-appointment-table td:not(.pet-profile-row-action),
+.pet-profile-vet-table td:not(.pet-profile-row-action),
+.pet-profile-medication-table td:not(.pet-profile-row-action),
+.pet-profile-vaccine-table td:not(.pet-profile-row-action),
+.pet-profile-health-condition-table td:not(.pet-profile-row-action),
+.pet-profile-food-table td:not(.pet-profile-row-action),
+.pet-profile-behavior-table td:not(.pet-profile-row-action) {
+    font-size: 11px;
+    background-color: aliceblue;
+    border: 1px solid var(--table-header-color);
+    padding: 5px 8px;
+    text-align: center;
+    color: var(--text-color);
+}
+
+/* Rounds the corners of the actual header/last row -- there's no <th> at all
+   for the action columns (see petProfileTable.jsx), so thead's :last-child is
+   already the last real header cell. The bottom row is always either the
+   collapsed "+ Add ___" trigger or an error message, both a single
+   colSpan-spanning <td> that's simultaneously :first-child and :last-child. */
+.pet-profile-microchip-table thead tr:first-child th:first-child,
+.pet-profile-appointment-table thead tr:first-child th:first-child,
+.pet-profile-vet-table thead tr:first-child th:first-child,
+.pet-profile-medication-table thead tr:first-child th:first-child,
+.pet-profile-vaccine-table thead tr:first-child th:first-child,
+.pet-profile-health-condition-table thead tr:first-child th:first-child,
+.pet-profile-food-table thead tr:first-child th:first-child,
+.pet-profile-behavior-table thead tr:first-child th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.pet-profile-microchip-table thead tr:first-child th:last-child,
+.pet-profile-appointment-table thead tr:first-child th:last-child,
+.pet-profile-vet-table thead tr:first-child th:last-child,
+.pet-profile-medication-table thead tr:first-child th:last-child,
+.pet-profile-vaccine-table thead tr:first-child th:last-child,
+.pet-profile-health-condition-table thead tr:first-child th:last-child,
+.pet-profile-food-table thead tr:first-child th:last-child,
+.pet-profile-behavior-table thead tr:first-child th:last-child {
+    border-top-right-radius: 10px;
+}
+
+/* The "last row" for rounding purposes is either the actual last <tr>, or --
+   when a save/create just failed -- the row right before the error message,
+   since the error row itself is a separate page-colored banner (see
+   .pet-profile-row-error below) and shouldn't be what "holds" the table's
+   rounded corner. Without the :has() branch, a visible failure would leave
+   the real colored box above it looking square-cornered. */
+.pet-profile-microchip-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:first-child,
+.pet-profile-appointment-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:first-child,
+.pet-profile-vet-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:first-child,
+.pet-profile-medication-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:first-child,
+.pet-profile-vaccine-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:first-child,
+.pet-profile-health-condition-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:first-child,
+.pet-profile-food-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:first-child,
+.pet-profile-behavior-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+.pet-profile-microchip-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:last-child,
+.pet-profile-appointment-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:last-child,
+.pet-profile-vet-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:last-child,
+.pet-profile-medication-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:last-child,
+.pet-profile-vaccine-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:last-child,
+.pet-profile-health-condition-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:last-child,
+.pet-profile-food-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:last-child,
+.pet-profile-behavior-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+/* The :last-child/:has() rule above only rounds the corner when that row is a
+   single colSpan-ed cell (the collapsed "+ Add ___" trigger, or an error
+   row). Any other qualifying row -- a real data row, or the add/edit form
+   while open -- ends in 2 trailing action cells (Edit+Delete or
+   Check+Close), which are transparent/borderless, so rounding *them* rounds
+   nothing visible. This targets the actual last visible (non-action) cell
+   instead, so the corner stays rounded in every state. */
+.pet-profile-microchip-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:not(.pet-profile-row-action):nth-last-child(3),
+.pet-profile-appointment-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:not(.pet-profile-row-action):nth-last-child(3),
+.pet-profile-vet-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:not(.pet-profile-row-action):nth-last-child(3),
+.pet-profile-medication-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:not(.pet-profile-row-action):nth-last-child(3),
+.pet-profile-vaccine-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:not(.pet-profile-row-action):nth-last-child(3),
+.pet-profile-health-condition-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:not(.pet-profile-row-action):nth-last-child(3),
+.pet-profile-food-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:not(.pet-profile-row-action):nth-last-child(3),
+.pet-profile-behavior-table :is(tbody tr:last-child, tbody tr:has(+ tr .pet-profile-row-error)) td:not(.pet-profile-row-action):nth-last-child(3) {
+    border-bottom-right-radius: 10px;
+}
+
+/* Pet Name field in the photo header, used on the Add/Edit Pet forms. */
+.pet-profile-header p {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 4px 0 2px 0;
+}
+
+.pet-profile-header input {
+    border-radius: 20px;
+    border: 1px solid var(--table-header-color);
+    width: 200px;
+    height: 30px;
+    padding-left: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Edit/delete/save/cancel icons in every tab's action columns */
+.pet-profile-tab-content td svg {
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-color);
+    vertical-align: middle;
+}
+
+.pet-profile-tab-content td svg:hover {
+    color: var(--table-header-color);
+}
+
+/* Error shown under a row that failed to save/create (its onSave/onCreate
+   returned false, e.g. a rejected required field) -- otherwise nothing
+   visibly happens when the checkmark is clicked, which reads as "broken". */
+.pet-profile-row-error {
+    color: #c0392b;
+    font-weight: bold;
+    background-color: var(--background-color) !important;
+    border: none !important;
+}
+
+/* Inputs/selects that replace a row's cells while it's being edited in-line.
+   display: block so a cell holding several stacked fields (like the vet
+   office's address lines) lays them out one per line instead of wrapping
+   unpredictably as inline elements. */
+.pet-profile-tab-content td input,
+.pet-profile-tab-content td select {
+    display: block;
+    font-size: 11px;
+    width: 100%;
+    min-width: 70px;
+    box-sizing: border-box;
+    border: 1px solid var(--table-header-color);
+    border-radius: 6px;
+    padding: 3px 5px;
+}
+
+.pet-profile-tab-content td input:not(:last-child) {
+    margin-bottom: 4px;
+}
+
+/* Collapsed "+ Add ___" row at the top of each editable tab's table */
+.pet-profile-add-row-trigger td {
+    cursor: pointer;
+    font-weight: bold;
+    text-align: left !important;
+}
+
+.pet-profile-add-row-trigger:hover td {
+    background-color: var(--background-color);
+}

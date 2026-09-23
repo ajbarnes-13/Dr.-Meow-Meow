@@ -1,0 +1,43 @@
+/* Global style sheet for defaults */
+
+/* Main color scheme. If i change it later, I can just change it once here, everywhere else will auto-update */
+:root {
+    --text-color: #493c34;
+    --background-color: #fce9cb;
+    --header-color: #b1dfec;
+    --table-header-color: #8fb6c1;
+
+    /* Shared default/hover look for action buttons (Save, Cancel, Add Pet,
+       the hamburger menu toggle, etc.) site-wide -- matches the Contact/
+       About/Privacy Policy footer buttons, which are the site's standard
+       button look. The nav dropdown's own links/buttons and special-case
+       buttons (like the destructive Delete Pet button, the petProfile.jsx
+       tab bar, or the Google sign-in button) use their own colors on
+       purpose and aren't built from these. */
+    --button-bg: var(--header-color);
+    --button-bg-hover: var(--table-header-color);
+    --button-text: var(--text-color);
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+/* Default look for plain in-content links (About/Contact/Help, etc.) --
+   matches the site's accent color instead of the browser's default blue/
+   purple. Nav, footer, and brand links already set their own color via
+   more specific selectors, so this doesn't affect them. */
+a {
+    color: var(--text-color);
+    text-decoration: underline;
+}
+
+a:hover {
+    color: var(--table-header-color);
+}
+
+a:visited {
+    color: var(--text-color);
+}
