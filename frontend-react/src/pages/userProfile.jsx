@@ -54,7 +54,8 @@ function UserProfile() {
     // sign-in popup for Google accounts.
     const isGoogleAccount = user?.providerData?.[0]?.providerId === 'google.com';
 
-    // The portfolio demo account's email, so its own email/password/delete
+    // The portfolio demo account's email (visitors reach it through /demo,
+    // which signs in without a password), so its own email/password/delete
     // controls can be disabled here -- visitors can look around and change
     // their Preferred Name, but can't lock out the next visitor or wipe the
     // account. This is a UI-level guard only, not a security boundary: it

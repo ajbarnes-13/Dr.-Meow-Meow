@@ -12,12 +12,16 @@ import foodRouter from './controllers/foodController.mjs';
 import healthConditionsRouter from './controllers/healthConditionsController.mjs';
 import medicationsRouter from './controllers/medicationsController.mjs';
 import vetOfficeRouter from './controllers/vetOfficeController.mjs';
+import demoRouter from './controllers/demoController.mjs';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 // app.use() is what actually turns a router "on" -- without this line, the routes inside
 // it exist in code but Express never listens for them, so every request to them 404s.
+// demoRouter must come first: each router below runs requireAuth on every request
+// that passes through it, which would 401 this public route.
+app.use(demoRouter);
 app.use(behaviorsRouter);
 app.use(appointmentsRouter);
 app.use(petsRouter);

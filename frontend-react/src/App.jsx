@@ -12,11 +12,13 @@ import PetProfile from './pages/petProfile'
 import Pets from './pages/pets'
 import UserProfile from './pages/userProfile'
 import About from './pages/about';
-import PrivacyPolicy from './pages/privacyPolicy';
+// Commented out along with its route and footer link below, until the page has real content.
+// import PrivacyPolicy from './pages/privacyPolicy';
 import EditPetProfile from './pages/editPetProfile';
 import AddPet from './pages/addPet';
 import AddAppointment from './pages/addAppointment';
 import AddVet from './pages/addVet';
+import Demo from './pages/demo';
 
 // Guards a route so it only renders for a signed-in user; anyone else is sent
 // to /login (remembering where they were trying to go, so login can send them
@@ -61,12 +63,16 @@ function NavBar() {
 
     // Closes the whole menu (and any open submenu) whenever the route changes --
     // catches navigation that doesn't go through a Link's own onClick, like the
-    // browser's back/forward buttons.
-    useEffect(() => {
+    // browser's back/forward buttons. Done during render rather than in an
+    // effect (React's recommended pattern for resetting state when a value
+    // changes), so the menu never paints open for a frame on the new page.
+    const [prevPathname, setPrevPathname] = useState(location.pathname);
+    if (prevPathname !== location.pathname) {
+        setPrevPathname(location.pathname);
         setMenuOpen(false);
         setPetsMenuOpen(false);
         setEditPetMenuOpen(false);
-    }, [location.pathname]);
+    }
 
     // Closes the menu on a click anywhere outside the nav (including its
     // submenus), same as any standard dropdown.
@@ -210,6 +216,7 @@ function App() {
                     {/* Public: no login required */}
                     <Route path="/" element={<Login/>} />
                     <Route path="/login" element={<Login/>} />
+                    <Route path="/demo" element={<Demo/>} />
                     <Route path="/helpFAQ" element={<HelpFAQ/>} />
                     <Route path="/contactUs" element={<ContactUs/>} />
                     <Route path="/about" element={<About/>} />

@@ -2,7 +2,7 @@
 
 A full-stack pet health and behavior tracking app, built with React on the frontend, a Node.js/Express REST API on the backend, and a MySQL database, with Firebase handling authentication.
 
-**Live demo: [drmeowmeow.up.railway.app](https://drmeowmeow.up.railway.app/)**
+**Live demo: [drmeowmeow.up.railway.app/demo](https://drmeowmeow.up.railway.app/demo)** (signs you straight into a demo account)
 
 <img src="frontend-react/public/dr_meow_meow_mascot.png" alt="Dr. Meow Meow mascot: a cartoon kawaii Siamese cat in an old-timey doctor uniform, standing in her office" width="180" />
 
@@ -68,6 +68,7 @@ DB_NAME=
 DB_PORT=
 PORT=
 GOOGLE_APPLICATION_CREDENTIALS=   # path to your Firebase service account JSON key
+DEMO_ACCOUNT_EMAIL=               # optional: enables /demo, which signs visitors into this account with no password
 ```
 
 **`frontend-react/.env`**
